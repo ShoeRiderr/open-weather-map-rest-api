@@ -4,16 +4,14 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\Response;
 use Tests\Traits\AuthHelper;
 
 class LoginTest extends TestCase
 {
     use WithFaker;
-    use DatabaseMigrations;
     use RefreshDatabase;
     use AuthHelper;
 
@@ -22,17 +20,21 @@ class LoginTest extends TestCase
      */
     public function login_successfull(): void
     {
-        $user = User::create($this->prepareUserData());
+        $data = $this->prepareUserData();
+        $user = User::create($data);
 
         $response = $this->postJson('api/login', [
             'email' => $user->email,
-            'password' => 'password',
+            'password' => $data['password'],
         ]);
 
         $response->assertJsonStructure([
-            'token'
+            'message',
+            'token',
         ])
-            ->assertOk();
+            ->assertStatus(Response::HTTP_OK);
+
+        $this->assertEquals(auth()->id(), $user->id);
     }
 
     /**
@@ -50,10 +52,12 @@ class LoginTest extends TestCase
         ]);
 
         $response
-            ->assertInvalid([
+            ->assertExactJson([
                 'error' => __('auth.failed')
             ])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        $this->assertNotEquals(auth()->id(), $user->id);
 
         // wrong password
         $response = $this->postJson('api/login', [
@@ -62,10 +66,12 @@ class LoginTest extends TestCase
         ]);
 
         $response
-            ->assertInvalid([
+            ->assertExactJson([
                 'error' => __('auth.failed')
             ])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        $this->assertNotEquals(auth()->id(), $user->id);
 
         // wrong password and email
         $response = $this->postJson('api/login', [
@@ -74,9 +80,11 @@ class LoginTest extends TestCase
         ]);
 
         $response
-            ->assertInvalid([
+            ->assertExactJson([
                 'error' => __('auth.failed')
             ])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        $this->assertNotEquals(auth()->id(), $user->id);
     }
 }

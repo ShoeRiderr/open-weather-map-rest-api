@@ -6,13 +6,13 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 use Tests\Traits\AuthHelper;
 
 class RegisterTest extends TestCase
 {
     use WithFaker;
-    use DatabaseMigrations;
     use RefreshDatabase;
     use AuthHelper;
 
@@ -38,7 +38,7 @@ class RegisterTest extends TestCase
             ->assertJsonMissing([
                 'data.password' => 'password',
             ])
-            ->assertStatus(201);
+            ->assertStatus(Response::HTTP_CREATED);
 
         $this->assertDatabaseHas('users', [
 
@@ -70,7 +70,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['name', 'surname', 'password'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
@@ -90,7 +90,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['name', 'surname', 'password'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
@@ -110,7 +110,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['name', 'surname', 'password'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
@@ -137,7 +137,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['email', 'surname', 'password'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'surname' => $data['surname'],
@@ -164,7 +164,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['email', 'name', 'password'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
@@ -189,7 +189,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['email', 'name', 'surname'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
@@ -209,7 +209,7 @@ class RegisterTest extends TestCase
                 ])
             ])
             ->assertValid(['email', 'name', 'surname'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
@@ -229,7 +229,7 @@ class RegisterTest extends TestCase
                 ]),
             ])
             ->assertValid(['email', 'name', 'surname'])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseMissing('users', [
             'name' => $data['name'],
