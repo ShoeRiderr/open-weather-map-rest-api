@@ -4,13 +4,13 @@ This is the basic app for fetching basic information about the current weather i
 
 #### Routes (method - endpoint > controller method)
 - POST - api/login › Api\AuthController@login
-  Params (param - validation)
+  ##### Params (param - validation)
   * email - required|email
   * password - required
 - POST - api/logout › Api\AuthController@logout
-  Bearer token required for successful logout
+  ##### Bearer token required for successful logout
 - POST - api/register › Api\AuthController@register
-  Params (param - validation)
+  ##### Params (param - validation)
   * name - required
   * surname - required
   * email - required|email|unique,users,email
