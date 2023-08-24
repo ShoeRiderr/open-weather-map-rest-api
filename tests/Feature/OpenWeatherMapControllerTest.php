@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
-class OpenWheatherMapControllerTest extends TestCase
+class OpenWeatherMapControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -30,7 +30,7 @@ class OpenWheatherMapControllerTest extends TestCase
         parent::setUp();
 
         $this->body = file_get_contents(
-            base_path('tests/Fixtures/Helpers/open_wheather_map_current_date_data.json')
+            base_path('tests/Fixtures/Helpers/open_weather_map_current_date_data.json')
         );
 
         $this->user = User::factory()->create();
@@ -39,10 +39,10 @@ class OpenWheatherMapControllerTest extends TestCase
     /**
      * @test
      */
-    public function fetching_current_wheather_credential_successfull(): void
+    public function fetching_current_weather_credential_successfull(): void
     {
         $expectedResponse = file_get_contents(
-            base_path('tests/Fixtures/Helpers/current_wheather_credential_expected_response.json')
+            base_path('tests/Fixtures/Helpers/current_weather_credential_expected_response.json')
         );
 
         $params = [
@@ -51,12 +51,12 @@ class OpenWheatherMapControllerTest extends TestCase
         ];
 
         Http::fake([
-            Config::get('openwheathermap.base_url') . '*' => Http::response($this->body, Response::HTTP_OK),
+            Config::get('openweathermap.base_url') . '*' => Http::response($this->body, Response::HTTP_OK),
         ]);
 
         $response = $this->actingAs($this->user)->json(
             'GET',
-            'api/wheather/current',
+            'api/weather/current',
             $params
         );
 
@@ -68,10 +68,10 @@ class OpenWheatherMapControllerTest extends TestCase
     /**
      * @test
      */
-    public function fetching_current_wheather_credential_with_invalid_data()
+    public function fetching_current_weather_credential_with_invalid_data()
     {
         Http::fake([
-            Config::get('openwheathermap.base_url') . '*' => Http::response($this->body, Response::HTTP_OK),
+            Config::get('openweathermap.base_url') . '*' => Http::response($this->body, Response::HTTP_OK),
         ]);
 
         // Missing lat param
@@ -81,7 +81,7 @@ class OpenWheatherMapControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)->json(
             'GET',
-            'api/wheather/current',
+            'api/weather/current',
             $params
         );
 
@@ -100,7 +100,7 @@ class OpenWheatherMapControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)->json(
             'GET',
-            'api/wheather/current',
+            'api/weather/current',
             $params
         );
 
@@ -118,7 +118,7 @@ class OpenWheatherMapControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)->json(
             'GET',
-            'api/wheather/current',
+            'api/weather/current',
             $params
         );
 

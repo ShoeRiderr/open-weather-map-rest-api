@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use Throwable;
 
-class OpenWheatherMapService
+class OpenWeatherMapService
 {
     /**
      * @var Response
@@ -19,7 +19,7 @@ class OpenWheatherMapService
     {
     }
 
-    public function getCurrentWheatherInfo(array $queryParams): self
+    public function getCurrentWeatherInfo(array $queryParams): self
     {
         // Available query params:
         $availableQueryKeys = [

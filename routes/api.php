@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\OpenWheatherMapController;
+use App\Http\Controllers\Api\OpenWeatherMapController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,8 +23,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::delete('users/{user}', [UserController::class, 'destroy']);
 
-    Route::group(['prefix' => 'wheather'], function () {
-        Route::get('current', [OpenWheatherMapController::class, 'getCurrentWheather']);
+    Route::group(['prefix' => 'weather'], function () {
+        Route::get('current', [OpenWeatherMapController::class, 'getCurrentWeather']);
     });
 });
 

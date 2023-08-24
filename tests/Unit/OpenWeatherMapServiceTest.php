@@ -3,13 +3,13 @@
 namespace Tests\Unit;
 
 use App\Helpers\GuzzleClients\OpenWeatherMapClient;
-use App\Services\OpenWheatherMapService;
+use App\Services\OpenWeatherMapService;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\TestCase;
 
-class OpenWheatherMapServiceTest extends TestCase
+class OpenWeatherMapServiceTest extends TestCase
 {
     /**
      * @test
@@ -31,7 +31,7 @@ class OpenWheatherMapServiceTest extends TestCase
             'lang',
         ];
 
-        $response = (new OpenWheatherMapService(new PendingRequest()))
+        $response = (new OpenWeatherMapService(new PendingRequest()))
             ->filterQueryParams($queryParams, $availableQueryKeys);
 
         $diff = array_diff(array_keys($queryParams), array_keys($response));

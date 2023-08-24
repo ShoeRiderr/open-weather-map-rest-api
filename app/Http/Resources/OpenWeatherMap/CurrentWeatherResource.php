@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\OpenWheatherMap;
+namespace App\Http\Resources\OpenWeatherMap;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CurrentWheatherResource extends JsonResource
+class CurrentWeatherResource extends JsonResource
 {
     public static $wrap = null;
 

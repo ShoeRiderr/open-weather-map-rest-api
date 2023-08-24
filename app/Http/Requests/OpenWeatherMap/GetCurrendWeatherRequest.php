@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\OpenWheatherMap;
+namespace App\Http\Requests\OpenWeatherMap;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetCurrendWheatherRequest extends FormRequest
+class GetCurrendWeatherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class GetCurrendWheatherRequest extends FormRequest
         return [
             'lat' => ['required'],
             'lon' => ['required'],
-            'exclude' => ['nullable'],
-            'units' => ['nullable'],
-            'lang' => ['nullable'],
+            'exclude' => ['nullable', 'string'],
+            'units' => ['nullable', 'string'],
+            'lang' => ['nullable', 'string'],
         ];
     }
 }
