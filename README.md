@@ -16,7 +16,7 @@ This is the basic app for fetching basic information about the current weather i
   * email - required|email|unique,users,email
   * password - required|confirmed
 - DELETE - api/users/{user} › Api\UserController@destroy
-  Access to delete only logged in user
+  ##### Access to delete only logged in user
 - GET|HEAD - api/weather/current › Api\OpenWheatherMapController@getCurrentWheather
   ##### Params (param - validation)
   * lat - required
