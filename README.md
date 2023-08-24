@@ -1,6 +1,6 @@
 ### OpenWheatherMap RestAPI
 
-This is the basic app for fetching basic information about the current weather in a given sent localization.
+This is a basic application used to download basic information about the current weather in a given location
 
 #### Routes (method - endpoint > controller method)
 - POST - api/login › Api\AuthController@login
