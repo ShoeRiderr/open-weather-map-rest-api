@@ -2,9 +2,11 @@
 
 namespace Tests\Traits;
 
+use App\Models\User;
+
 trait AuthHelper
 {
-    private function prepareUserData(): array
+    protected function prepareUserData(): array
     {
         return [
             'name' => 'test',

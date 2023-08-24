@@ -4,9 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
-class UserTest extends TestCase
+class UserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -23,7 +24,7 @@ class UserTest extends TestCase
             ->assertExactJson([
                 'message' => __('user.delete.success')
             ])
-            ->assertStatus(200);
+            ->assertStatus(Response::HTTP_OK);
 
         $this->assertDatabaseMissing('users', $user->toArray());
     }
@@ -41,7 +42,7 @@ class UserTest extends TestCase
             ->assertExactJson([
                 'message' => 'Unauthenticated.',
             ])
-            ->assertStatus(401);
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
         $this->assertDatabaseMissing('users', $user->toArray());
     }
@@ -49,7 +50,7 @@ class UserTest extends TestCase
     /**
      * @test
      */
-    public function delete_other_user(): void
+    public function attempt_to_delete_other_user(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -60,7 +61,7 @@ class UserTest extends TestCase
             ->assertExactJson([
                 'error' => __('user.delete.remove_other_user'),
             ])
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->assertDatabaseHas('users', [
             'id' => $user2->id,

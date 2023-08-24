@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -13,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 use Throwable;
 
 class AuthController extends Controller
@@ -32,7 +31,7 @@ class AuthController extends Controller
                 ]
             );
 
-            if ($validateUser->fails() || !Auth::attempt($request->only(['email', 'password']))) {
+            if ($validateUser->fails() || !Auth::attempt($validateUser->validated())) {
                 return response()->json([
                     'error' => __('auth.failed')
                 ], Response::HTTP_UNAUTHORIZED);
@@ -53,12 +52,31 @@ class AuthController extends Controller
         }
     }
 
+    public function logout(Request $request)
+    {
+        $accessToken = $request->bearerToken();
+
+        $token = PersonalAccessToken::findToken($accessToken);
+
+        if ($token) {
+            $token->delete();
+        }
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'message' => __('auth.log_out')
+        ]);
+    }
+
     public function register(RegisterRequest $request)
     {
         $response = $this->userService->create($request->validated());
 
         if (!$response) {
-            return response()->json(__('error.server_error'), 500);
+            return response()->json(__('error.server_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $response;
