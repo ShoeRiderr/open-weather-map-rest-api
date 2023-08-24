@@ -21,9 +21,9 @@ This is a basic application used to download basic information about the current
   ##### Params (param - validation)
   * lat - required
   * lon - required
-  * exclude nullable|string
-  * units nullable|string
-  * lang nullable|string
+  * exclude - nullable|string
+  * units - nullable|string
+  * lang - nullable|string
   ##### Response example
   ```
   {
