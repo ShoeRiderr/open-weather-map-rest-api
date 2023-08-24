@@ -12,13 +12,23 @@ class UserControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * @var User
+     */
+    private $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+    }
+
+    /**
      * @test
      */
     public function delete_successfull(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->deleteJson('api/users/' . $user->id);
+        $response = $this->actingAs($this->user)->deleteJson('api/users/' . $this->user->id);
 
         $response
             ->assertExactJson([
@@ -26,7 +36,7 @@ class UserControllerTest extends TestCase
             ])
             ->assertStatus(Response::HTTP_OK);
 
-        $this->assertDatabaseMissing('users', $user->toArray());
+        $this->assertDatabaseMissing('users', $this->user->toArray());
     }
 
     /**
@@ -34,9 +44,7 @@ class UserControllerTest extends TestCase
      */
     public function delete_unauthorized(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->deleteJson('api/users/' . $user->id);
+        $response = $this->deleteJson('api/users/' . $this->user->id);
 
         $response
             ->assertExactJson([
@@ -44,7 +52,7 @@ class UserControllerTest extends TestCase
             ])
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
-        $this->assertDatabaseMissing('users', $user->toArray());
+        $this->assertDatabaseMissing('users', $this->user->toArray());
     }
 
     /**
@@ -52,10 +60,9 @@ class UserControllerTest extends TestCase
      */
     public function attempt_to_delete_other_user(): void
     {
-        $user = User::factory()->create();
         $user2 = User::factory()->create();
 
-        $response = $this->actingAs($user)->deleteJson('api/users/' . $user2->id);
+        $response = $this->actingAs($this->user)->deleteJson('api/users/' . $user2->id);
 
         $response
             ->assertExactJson([

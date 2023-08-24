@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -35,6 +36,17 @@ class AuthController extends Controller
                 return response()->json([
                     'error' => __('auth.failed')
                 ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            $accessToken = $request->bearerToken();
+
+            $token = PersonalAccessToken::findToken($accessToken);
+
+            if ($token) {
+                return response()->json([
+                    'message' => __('auth.already_log_in'),
+                    'token' => $accessToken
+                ], Response::HTTP_OK);
             }
 
             $user = User::where('email', $request->email)->first();
@@ -73,12 +85,12 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $response = $this->userService->create($request->validated());
+        $user = $this->userService->create($request->validated());
 
-        if (!$response) {
+        if (!$user) {
             return response()->json(__('error.server_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $response;
+        return UserResource::make($user);
     }
 }

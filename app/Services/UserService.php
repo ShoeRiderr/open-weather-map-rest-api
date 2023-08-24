@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -27,7 +26,7 @@ class UserService
 
         try {
             do {
-                if ($user->id !== auth()->user()->id) {
+                if (!Gate::allows('delete', $user)) {
                     $responseMessage = [
                         'error' => __('user.delete.remove_other_user')
                     ];
@@ -75,7 +74,7 @@ class UserService
         try {
             $user = User::create($data);;
 
-            return UserResource::make($user);
+            return $user;
         } catch (Throwable $e) {
             Log::error($e);
 

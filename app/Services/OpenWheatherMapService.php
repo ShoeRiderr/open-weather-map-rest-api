@@ -1,14 +1,25 @@
 <?php
 
-use App\Helpers\GuzzleClients\OpenWeatherMapClient;
+namespace App\Services;
+
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Client\Response;
+use Throwable;
 
 class OpenWheatherMapService
 {
-    public function __construct(private OpenWeatherMapClient $openWeatherMapClient)
+    /**
+     * @var Response
+     */
+    private $response;
+
+    public function __construct(private PendingRequest $client)
     {
     }
 
-    public function getCurrentWheatherInfo(array $queryParams)
+    public function getCurrentWheatherInfo(array $queryParams): self
     {
         // Available query params:
         $availableQueryKeys = [
@@ -19,16 +30,24 @@ class OpenWheatherMapService
             'lang',
         ];
         $query = $this->filterQueryParams($queryParams, $availableQueryKeys);
+        $baseQuery = Arr::get($this->client->getOptions(), 'query');
+        $query = array_merge($query, $baseQuery);
 
-        $this->openWeatherMapClient->get('onecall', [
-            'query' => $query
-        ]);
+        $this->response = $this->client
+            ->get('/onecall', $query);
+
+        return $this;
     }
 
-    private function filterQueryParams(array $queryParams, array $allowedKeys)
+    public function filterQueryParams(array $queryParams, array $allowedKeys)
     {
         return array_filter($queryParams, function ($key) use ($allowedKeys) {
             return in_array($key, $allowedKeys);
         }, ARRAY_FILTER_USE_KEY);
+    }
+
+    public function getResponse(): Response
+    {
+        return $this->response;
     }
 }

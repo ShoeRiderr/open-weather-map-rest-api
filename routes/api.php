@@ -22,5 +22,9 @@ Route::post('login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::delete('users/{user}', [UserController::class, 'destroy']);
+
+    Route::group(['prefix' => 'wheather'], function () {
+        Route::get('current', [OpenWheatherMapController::class, 'getCurrentWheather']);
+    });
 });
 
