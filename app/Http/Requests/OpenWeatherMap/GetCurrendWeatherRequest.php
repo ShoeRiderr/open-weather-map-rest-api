@@ -24,9 +24,6 @@ class GetCurrendWeatherRequest extends FormRequest
         return [
             'lat' => ['required'],
             'lon' => ['required'],
-            'exclude' => ['nullable', 'string'],
-            'units' => ['nullable', 'string'],
-            'lang' => ['nullable', 'string'],
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\StringHelper;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -39,8 +40,12 @@ class OpenWeatherMapService
         return $this;
     }
 
-    public function filterQueryParams(array $queryParams, array $allowedKeys)
+    public function filterQueryParams(array $queryParams, array $allowedKeys): array
     {
+        if (!StringHelper::allArrayKeysAreString($queryParams) || StringHelper::hasStringKeys($allowedKeys)) {
+            return [];
+        }
+
         return array_filter($queryParams, function ($key) use ($allowedKeys) {
             return in_array($key, $allowedKeys);
         }, ARRAY_FILTER_USE_KEY);
